@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Saaloop is an experimental DSL implementation on top of [Apache Hadoop](http://hadoop.apache.org/) Java library. It avails from the strong Scala Type
+[Saaloop](https://github.com/amir343/saaloop) is an experimental DSL implementation on top of [Apache Hadoop](http://hadoop.apache.org/) Java library. It avails from the strong Scala Type
 System and provides you to write concise and easy-to-read DSL without any XML configuration
 
 ## How does it look like?
@@ -10,6 +10,12 @@ System and provides you to write concise and easy-to-read DSL without any XML co
 The classic word counts example looks like this in Saaloop:
 
 ```scala
+import com.jayway.saaloop.dsl.Saaloop._
+
+object WordCount {
+
+  def main(args: Array[String]) {
+
     val c = hadoopConfig {
       ("fs.temp.dir" << "/tmp") +
       ("dfs.name.dir" << "/tmp") +
@@ -29,7 +35,13 @@ The classic word counts example looks like this in Saaloop:
       reduceWith = r,
       hadoopConfiguration = c
     )
+  }
+
+}
+
 ```
+
+Compare it to [this](http://wiki.apache.org/hadoop/WordCount)
 
 ## How to build
 
