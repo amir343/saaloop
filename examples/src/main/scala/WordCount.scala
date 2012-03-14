@@ -29,9 +29,7 @@ object WordCount {
     }
 
     val m = mapper {
-      (i: Long, s: String) => {
-        s.split(" ").toList.map( w => (w, 1) )
-      }
+      (i: Long, s: String) => s.split(" ").toList.map( w => (w, 1) )
     }
 
     val r = reducer {
