@@ -3,7 +3,6 @@ package com.jayway.saaloop.dsl
 import org.apache.hadoop.mapreduce.{Reducer, Job, Mapper}
 import org.apache.hadoop.conf.Configuration
 
-
 /**
  * Copyright 2012 Amir Moulavi (amir.moulavi@gmail.com)
  *
@@ -22,13 +21,13 @@ import org.apache.hadoop.conf.Configuration
  * @author Amir Moulavi
  */
 
-trait SaaloopJob {
+trait SaaloopJob extends Types {
 
   val conf = new Configuration()
 
   object job {
 
-    def apply[K1, V1, K2, V2, K3, V3, K4, V4]
+    def apply[K1 <: key, V1 <: value, K2 <: key, V2 <: value, K3 <: key, V3 <: value, K4 <: key, V4 <: value]
       (name:String)(mapWith:Mapper[K1, V1, K2, V2], reduceWith:Reducer[K3, V3, K4, V4], hadoopConfiguration:Configuration = conf):Job = {
 
       val job = new Job(hadoopConfiguration, name)

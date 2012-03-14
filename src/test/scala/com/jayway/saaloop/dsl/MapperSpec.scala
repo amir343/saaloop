@@ -3,6 +3,7 @@ package com.jayway.saaloop.dsl
 import org.specs2.mutable.Specification
 import com.jayway.saaloop.dsl.Saaloop._
 import org.apache.hadoop.mapreduce.Mapper
+import org.apache.hadoop.io.{Text, LongWritable}
 
 /**
  * Copyright 2012 Amir Moulavi (amir.moulavi@gmail.com)
@@ -27,21 +28,21 @@ class MapperSpec extends Specification {
   "Mapper" should {
     "return correct instance of Mapper from MapReduce for pairs" in {
       val m = mapper {
-        (i:Int, s:String) => (i, s.length())
+        (i:LongWritable, s:Text) => (i, s)
       }
       m mustNotEqual null
       m match {
-        case s:Mapper[Int, String, Int, Int] => true
+        case s:Mapper[LongWritable, Text, LongWritable, Text] => true
         case _                               => false
       }
     }
     "return correct instance of Mapper from MapReduce for list of pairs" in {
       val m = mapper {
-        (i:Int, s:String) => List((i, s.length()))
+        (i:LongWritable, s:Text) => List((i, s))
       }
       m mustNotEqual null
       m match {
-        case s:Mapper[Int, String, Int, Int] => true
+        case s:Mapper[LongWritable, Text, LongWritable, Text] => true
         case _                               => false
       }
     }

@@ -20,9 +20,9 @@ import org.apache.hadoop.mapreduce.Reducer
  * @author Amir Moulavi
  */
 
-trait SaaloopReducer {
+trait SaaloopReducer extends Types {
 
-  implicit def reducePairs[K1, V1, K2, V2] = new Fun[(K1, V1) => (K2, V2), Reducer[K1, V1, K2, V2]] {
+  implicit def reducePairs[K1 <: key, V1 <: value, K2 <: key, V2 <: value] = new Fun[(K1, V1) => (K2, V2), Reducer[K1, V1, K2, V2]] {
     def apply(f:(K1, V1) => (K2, V2)) = {
       new Reducer[K1, V1, K2, V2] {
         def reduce(k1:K1, v1:V1, context:Context) {
@@ -33,7 +33,18 @@ trait SaaloopReducer {
     }
   }
 
-  implicit def reduceListPairs[K1, V1, K2, V2] = new Fun[(K1, V1) => List[(K2, V2)], Reducer[K1, V1, K2, V2]] {
+  implicit def reducePairs2[K1 <: key, V1 <: value, K2 <: key, V2 <: value] = new Fun[(K1, List[V1]) => (K2, V2), Reducer[K1, V1, K2, V2]] {
+    def apply(f:(K1, List[V1]) => (K2, V2)) = {
+      new Reducer[K1, V1, K2, V2] {
+        def reduce(k1:K1, v1:List[V1], context:Context) {
+          val (key, value) = f(k1, v1)
+          context.write(key, value)
+        }
+      }
+    }
+  }
+
+  implicit def reduceListPairs[K1 <: key, V1 <: value, K2 <: key, V2 <: value] = new Fun[(K1, V1) => List[(K2, V2)], Reducer[K1, V1, K2, V2]] {
     def apply(f:(K1, V1) => List[(K2, V2)]) = {
       new Reducer[K1, V1, K2, V2] {
         def reduce(k1:K1, v1:V1, context:Context) {
@@ -44,8 +55,18 @@ trait SaaloopReducer {
     }
   }
 
-  object reducer {
+  implicit def reduceListPairs2[K1 <: key, V1 <: value, K2 <: key, V2 <: value] = new Fun[(K1, List[V1]) => List[(K2, V2)], Reducer[K1, V1, K2, V2]] {
+    def apply(f:(K1, List[V1]) => List[(K2, V2)]) = {
+      new Reducer[K1, V1, K2, V2] {
+        def reduce(k1:K1, v1:List[V1], context:Context) {
+          val result = f(k1, v1)
+          result foreach { p:(K2, V2) => context.write(p._1, p._2) }
+        }
+      }
+    }
+  }
 
+  object reducer {
     def apply[F, K1, V1, K2, V2](f:F)(implicit fun:Fun[F, Reducer[K1, V1, K2, V2]]) = {
       fun(f)
     }

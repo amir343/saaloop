@@ -1,5 +1,7 @@
 package com.jayway.saaloop.dsl
 
+import org.apache.hadoop.io.{WritableComparable, Writable}
+
 /**
  * Copyright 2012 Amir Moulavi (amir.moulavi@gmail.com)
  *
@@ -18,9 +20,7 @@ package com.jayway.saaloop.dsl
  * @author Amir Moulavi
  */
 
-object Saaloop
-  extends   HadoopConfig
-  with      SaaloopMapper
-  with      SaaloopReducer
-  with      SaaloopJob
-  with      SaaloopWritable
+trait Types {
+  type key = Writable with WritableComparable[_]
+  type value = Writable
+}

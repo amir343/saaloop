@@ -20,9 +20,9 @@ import org.apache.hadoop.mapreduce.Mapper
  * @author Amir Moulavi
  */
 
-trait SaaloopMapper {
+trait SaaloopMapper extends Types {
 
-  implicit def mapPairs[K1, V1, K2, V2] = new Fun[(K1, V1) => (K2, V2), Mapper[K1, V1, K2, V2]] {
+  implicit def mapPairs[K1 <: key, V1 <: value, K2 <: key, V2 <: value] = new Fun[(K1, V1) => (K2, V2), Mapper[K1, V1, K2, V2]] {
     def apply(f: (K1, V1) => (K2, V2)) = {
       new Mapper[K1, V1, K2, V2] {
         def map(k:K1, v:V1, context:Context) {
@@ -33,7 +33,7 @@ trait SaaloopMapper {
     }
   }
 
-  implicit def mapListPairs[K1, V1, K2, V2] = new Fun[(K1, V1) => List[(K2, V2)], Mapper[K1, V1, K2, V2]] {
+  implicit def mapListPairs[K1 <: key, V1 <: value, K2 <: key, V2 <: value] = new Fun[(K1, V1) => List[(K2, V2)], Mapper[K1, V1, K2, V2]] {
     def apply(f: (K1, V1) => List[(K2, V2)]) = {
       new Mapper[K1, V1, K2, V2] {
         def map(k:K1, v:V1, context:Context) {

@@ -1,5 +1,8 @@
 package com.jayway.saaloop.dsl
 
+import org.apache.hadoop.io.{Text, LongWritable, IntWritable}
+
+
 /**
  * Copyright 2012 Amir Moulavi (amir.moulavi@gmail.com)
  *
@@ -18,9 +21,11 @@ package com.jayway.saaloop.dsl
  * @author Amir Moulavi
  */
 
-object Saaloop
-  extends   HadoopConfig
-  with      SaaloopMapper
-  with      SaaloopReducer
-  with      SaaloopJob
-  with      SaaloopWritable
+trait SaaloopWritable {
+
+  object writable {
+    def apply(v:Int):IntWritable = new IntWritable(v)
+    def apply(v:Long):LongWritable = new LongWritable(v)
+    def apply(v:String):Text = new Text(v)
+  }
+}

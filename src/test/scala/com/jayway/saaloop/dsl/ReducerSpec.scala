@@ -3,6 +3,7 @@ package com.jayway.saaloop.dsl
 import org.specs2.mutable.Specification
 import com.jayway.saaloop.dsl.Saaloop._
 import org.apache.hadoop.mapreduce.Reducer
+import org.apache.hadoop.io.{Text, LongWritable}
 
 /**
  * Copyright 2012 Amir Moulavi (amir.moulavi@gmail.com)
@@ -27,21 +28,21 @@ class ReducerSpec extends Specification {
   "Reducer" should {
     "return correct instance of Reducer from MapReduce for pairs" in {
       val r = reducer {
-        (i:Int, list:List[Int]) => (i, list.sum)
+        (i:LongWritable, s:Text) => (i, s)
       }
       r mustNotEqual null
       r match {
-        case s: Reducer[Int, List[Int], Int, Int] => true
+        case s: Reducer[LongWritable, Text, LongWritable, Text] => true
         case _                                    => false
       }
     }
     "return correct instance of Reducer from MapReduce for list of pairs" in {
       val r = reducer {
-        (i:Int, list:List[Int]) => List((i, list.sum))
+        (i:LongWritable, s:Text) => List((i, s))
       }
       r mustNotEqual null
       r match {
-        case s: Reducer[Int, List[Int], Int, Int] => true
+        case s: Reducer[LongWritable, Text, LongWritable, Text] => true
         case _                                    => false
       }
     }
