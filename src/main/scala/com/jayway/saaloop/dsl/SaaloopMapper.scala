@@ -33,10 +33,32 @@ trait SaaloopMapper extends Types {
     }
   }
 
+  implicit def mapPairs2[K1 <: key, V1 <: value, K2 <: key, V2 <: value] = new Fun[(K1, List[V1]) => (K2, V2), Mapper[K1, V1, K2, V2]] {
+    def apply(f: (K1, List[V1]) => (K2, V2)) = {
+      new Mapper[K1, V1, K2, V2] {
+        def map(k:K1, v:List[V1], context:Context) {
+          val (key, value) = f(k, v)
+          context.write(key, value)
+        }
+      }
+    }
+  }
+
   implicit def mapListPairs[K1 <: key, V1 <: value, K2 <: key, V2 <: value] = new Fun[(K1, V1) => List[(K2, V2)], Mapper[K1, V1, K2, V2]] {
     def apply(f: (K1, V1) => List[(K2, V2)]) = {
       new Mapper[K1, V1, K2, V2] {
         def map(k:K1, v:V1, context:Context) {
+          val result = f(k, v)
+          result foreach { p:(K2, V2) => context.write(p._1, p._2) }
+        }
+      }
+    }
+  }
+
+  implicit def mapListPairs2[K1 <: key, V1 <: value, K2 <: key, V2 <: value] = new Fun[(K1, List[V1]) => List[(K2, V2)], Mapper[K1, V1, K2, V2]] {
+    def apply(f: (K1, List[V1]) => List[(K2, V2)]) = {
+      new Mapper[K1, V1, K2, V2] {
+        def map(k:K1, v:List[V1], context:Context) {
           val result = f(k, v)
           result foreach { p:(K2, V2) => context.write(p._1, p._2) }
         }
