@@ -23,11 +23,11 @@ object WordCount {
     }
 
     val m = mapper {
-      (i: Long, s: String) => s.split(" ").toList.map( w => (w, 1) )
+      (i: LongWritable, s: Text) => s.toString.split(" ").toList.map( w => (writable(w), writable(1)) )
     }
 
     val r = reducer {
-      (w: String, list: List[Int]) => (w, list.sum)
+      (key: Text, list: List[IntWritable]) => (key, writable(list.foldLeft(0)(_ + _.get())) )
     }
 
     job("myjob")(
@@ -38,7 +38,6 @@ object WordCount {
   }
 
 }
-
 ```
 
 Compare it to [this](http://wiki.apache.org/hadoop/WordCount)
