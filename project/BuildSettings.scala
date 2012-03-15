@@ -3,7 +3,6 @@ import Keys._
 
 object BuildSettings {
   lazy val basicSettings = Seq[Setting[_]](
-    name          := "Saaloop",
     version       := "1.0-SNAPSHOT",
     homepage      := Some(new URL("https://github.com/amir343/saaloop")),
     organization  := "com.jayway",

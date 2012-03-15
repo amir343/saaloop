@@ -36,7 +36,7 @@ object SaaloopBuild extends Build {
   // Examples
   // -------------------------------------------------------------------------------------------------------------------
 
-  lazy val examples = Project("saaloop-examples", file("examples"))
+  lazy val examples = Project("saaloop-examples", file("saaloop-examples"))
     .settings(exampleSettings: _*)
     .settings(
     libraryDependencies ++= Seq(
