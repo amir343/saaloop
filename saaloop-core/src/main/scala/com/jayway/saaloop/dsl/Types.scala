@@ -1,6 +1,8 @@
 package com.jayway.saaloop.dsl
 
 import org.apache.hadoop.io.{WritableComparable, Writable}
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
 
 /**
  * Copyright 2012 Amir Moulavi (amir.moulavi@gmail.com)
@@ -23,4 +25,6 @@ import org.apache.hadoop.io.{WritableComparable, Writable}
 trait Types {
   type key = Writable with WritableComparable[_]
   type value = Writable
+  type fin = FileInputFormat[_, _]
+  type fout = FileOutputFormat[_, _]
 }

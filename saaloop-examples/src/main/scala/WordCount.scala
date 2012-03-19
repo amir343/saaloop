@@ -1,5 +1,7 @@
 import com.jayway.saaloop.dsl.Saaloop._
 import org.apache.hadoop.io.{IntWritable, Text, LongWritable}
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
 
 /**
  * Copyright 2012 Amir Moulavi (amir.moulavi@gmail.com)
@@ -38,9 +40,12 @@ object WordCount {
     }
 
     job("myjob")(
+      hadoopConfiguration = c,
       mapWith = m,
       reduceWith = r,
-      hadoopConfiguration = c
+      inputFormatClass = classOf[TextInputFormat],
+      outputFormatClass = classOf[TextOutputFormat[_,_]],
+      waitForCompletion = true
     )
   }
 

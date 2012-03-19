@@ -11,6 +11,9 @@ The classic word counts example looks like this in Saaloop:
 
 ```scala
 import com.jayway.saaloop.dsl.Saaloop._
+import org.apache.hadoop.io.{IntWritable, Text, LongWritable}
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
 
 object WordCount {
 
@@ -31,9 +34,12 @@ object WordCount {
     }
 
     job("myjob")(
+      hadoopConfiguration = c,
       mapWith = m,
       reduceWith = r,
-      hadoopConfiguration = c
+      inputFormatClass = classOf[TextInputFormat],
+      outputFormatClass = classOf[TextOutputFormat[_,_]],
+      waitForCompletion = true
     )
   }
 
